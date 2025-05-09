@@ -1,0 +1,6 @@
+@NetZone_BackEnd_HostAddress = http://localhost:5047
+
+GET {{NetZone_BackEnd_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
