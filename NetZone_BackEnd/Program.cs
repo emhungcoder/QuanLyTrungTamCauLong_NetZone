@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using NetZone_BackEnd.Models;
+using NetZone_BackEnd;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,12 +77,10 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-//// Seed dữ liệu (nếu có)
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    await SeedData.SeedRolesAndUsers(services);
-//}
+using (var scope = app.Services.CreateScope())
+{
+    DataSeeder.Seed(scope.ServiceProvider);
+}
 
 // Middleware
 if (app.Environment.IsDevelopment())

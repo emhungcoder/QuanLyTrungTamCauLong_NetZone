@@ -67,7 +67,7 @@ namespace ASM.API.Controllers
                 _context.UserAddresses.Add(address);
                 await _context.SaveChangesAsync();
             }
-            await _userManager.AddToRoleAsync(user, "Customer");
+            await _userManager.AddToRoleAsync(user, "Student");
 
             return Ok(new { message = "Đăng ký thành công!" });
         }
