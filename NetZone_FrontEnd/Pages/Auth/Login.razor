@@ -1,0 +1,78 @@
+﻿@page "/login"
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using Blazored.LocalStorage
+@using NetZone_FrontEnd.Services
+@inject AuthService AuthService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager Navigation
+
+<h3 class="mb-4">🔐 Đăng nhập hệ thống</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Email:</label>
+        <InputText class="form-control" @bind-Value="loginModel.Email" placeholder="Nhập email" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Mật khẩu:</label>
+        <InputText class="form-control" type="password" @bind-Value="loginModel.Password" placeholder="Nhập mật khẩu" />
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+</EditForm>
+
+<p class="mt-3 text-center">
+    Chưa có tài khoản?
+    <a href="/register">Đăng ký ngay</a>
+</p>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+        @message
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@code {
+ 
+    LoginModel loginModel = new();
+    string message = "";
+
+    async Task HandleLogin()
+    {
+        bool success = await AuthService.LoginAsync(loginModel);
+        if (success)
+        {
+            var token = await LocalStorage.GetItemAsync<string>("authToken");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            if (role == "Customer")
+            {
+                Navigation.NavigateTo("/customer/products");
+            }
+            else if (role == "Manager" || role == "Employee")
+            {
+                Navigation.NavigateTo("/productManeger");
+            }
+            else
+            {
+                Navigation.NavigateTo("/");
+            }
+
+            message = "Đăng nhập thành công!";
+        }
+        else
+        {
+            message = "Đăng nhập thất bại!";
+        }
+    }
+}
