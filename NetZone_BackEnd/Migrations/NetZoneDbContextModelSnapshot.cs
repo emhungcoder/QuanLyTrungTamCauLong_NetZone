@@ -887,6 +887,48 @@ namespace NetZone_BackEnd.Migrations
                     b.ToTable("ProductReviews");
                 });
 
+            modelBuilder.Entity("NetZone_BackEnd.Models.ProgressTracking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Evaluation")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Suggestion")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProgressTrackings");
+                });
+
             modelBuilder.Entity("NetZone_BackEnd.Models.SupportTicket", b =>
                 {
                     b.Property<int>("TicketId")
@@ -920,6 +962,44 @@ namespace NetZone_BackEnd.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("SupportTickets");
+                });
+
+            modelBuilder.Entity("NetZone_BackEnd.Models.TrainingMaterial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("TrainingMaterials");
                 });
 
             modelBuilder.Entity("NetZone_BackEnd.Models.UserAddress", b =>
@@ -1322,6 +1402,25 @@ namespace NetZone_BackEnd.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("NetZone_BackEnd.Models.ProgressTracking", b =>
+                {
+                    b.HasOne("NetZone_BackEnd.Models.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NetZone_BackEnd.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("NetZone_BackEnd.Models.SupportTicket", b =>
                 {
                     b.HasOne("NetZone_BackEnd.Models.ApplicationUser", "User")
@@ -1331,6 +1430,17 @@ namespace NetZone_BackEnd.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NetZone_BackEnd.Models.TrainingMaterial", b =>
+                {
+                    b.HasOne("NetZone_BackEnd.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("NetZone_BackEnd.Models.UserAddress", b =>

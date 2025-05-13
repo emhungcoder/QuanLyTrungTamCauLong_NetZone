@@ -11,6 +11,8 @@ namespace NetZone_BackEnd.Data
             : base(options)
         {
         }
+        public DbSet<ProgressTracking> ProgressTrackings { get; set; }
+        public DbSet<TrainingMaterial> TrainingMaterials { get; set; }
 
         public DbSet<UserPhone> UserPhones { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }

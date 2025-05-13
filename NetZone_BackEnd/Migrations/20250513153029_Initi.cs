@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NetZone_BackEnd.Migrations
 {
     /// <inheritdoc />
-    public partial class @int : Migration
+    public partial class Initi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -722,6 +722,30 @@ namespace NetZone_BackEnd.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TrainingMaterials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainingMaterials", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrainingMaterials_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Certificates",
                 columns: table => new
                 {
@@ -764,6 +788,36 @@ namespace NetZone_BackEnd.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Attendances_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "LessonId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProgressTrackings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LessonId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    Evaluation = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Suggestion = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProgressTrackings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProgressTrackings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProgressTrackings_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
                         principalColumn: "LessonId",
@@ -947,9 +1001,24 @@ namespace NetZone_BackEnd.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProgressTrackings_LessonId",
+                table: "ProgressTrackings",
+                column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProgressTrackings_UserId",
+                table: "ProgressTrackings",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SupportTickets_UserId",
                 table: "SupportTickets",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainingMaterials_CourseId",
+                table: "TrainingMaterials",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAddresses_UserId",
@@ -1020,7 +1089,13 @@ namespace NetZone_BackEnd.Migrations
                 name: "ProductReviews");
 
             migrationBuilder.DropTable(
+                name: "ProgressTrackings");
+
+            migrationBuilder.DropTable(
                 name: "SupportTickets");
+
+            migrationBuilder.DropTable(
+                name: "TrainingMaterials");
 
             migrationBuilder.DropTable(
                 name: "UserAddresses");
@@ -1030,9 +1105,6 @@ namespace NetZone_BackEnd.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Lessons");
 
             migrationBuilder.DropTable(
                 name: "Carts");
@@ -1057,6 +1129,9 @@ namespace NetZone_BackEnd.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Lessons");
 
             migrationBuilder.DropTable(
                 name: "Courses");

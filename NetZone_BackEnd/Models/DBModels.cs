@@ -494,4 +494,55 @@ namespace NetZone_BackEnd.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool IsResolved { get; set; } = false;
     }
+    public class ProgressTracking
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public int LessonId { get; set; }
+        public virtual Lesson Lesson { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+        public virtual ApplicationUser User { get; set; }
+
+        [MaxLength(2000)]
+        public string Note { get; set; } // Ghi chú, nhận xét
+
+        [MaxLength(1000)]
+        public string Evaluation { get; set; } // Đánh giá
+
+        [MaxLength(1000)]
+        public string Suggestion { get; set; } // Đề xuất cải tiến
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+    public class TrainingMaterial
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public int CourseId { get; set; }
+        public Course Course { get; set; }
+
+        [Required, MaxLength(200)]
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        // Đường dẫn tới file/video
+        [Required]
+        public string Url { get; set; }
+
+        // Loại tài liệu: Video, PDF, Slide, etc.
+        [Required]
+        public string Type { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+
+
 }

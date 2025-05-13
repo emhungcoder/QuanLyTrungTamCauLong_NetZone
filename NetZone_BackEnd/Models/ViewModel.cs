@@ -107,4 +107,22 @@ public class AuthResponse
         public string Phone { get; set; } = "";
         public string RoleName { get; set; } = "";
     }
+    public class ProgressTrackingDto
+    {
+        public int LessonId { get; set; }
+        public string UserId { get; set; }
+        public string Note { get; set; }
+        public string Evaluation { get; set; }
+        public string Suggestion { get; set; }
+    }
+    public class TrainingMaterialDto
+    {
+        public int Id { get; set; }
+        public int CourseId { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Url { get; set; }
+        public string Type { get; set; }
+    }
+
 }

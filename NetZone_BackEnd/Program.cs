@@ -12,8 +12,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using NetZone_BackEnd.Models;
 using NetZone_BackEnd;
+using NetZone_BackEnd.Service;
+using static NetZone_BackEnd.Service.ProgressTrackingService;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<ICoachService, CoachService>();
+builder.Services.AddScoped<IProgressTrackingService, ProgressTrackingService>();
+builder.Services.AddScoped<ITrainingMaterialService, TrainingMaterialService>();
 
 // CORS: Cho phép Blazor (https://localhost:7113) gọi đến API
 builder.Services.AddCors(options =>
@@ -76,7 +82,6 @@ builder.Services.AddAuthentication(options =>
 
 
 var app = builder.Build();
-
 using (var scope = app.Services.CreateScope())
 {
     DataSeeder.Seed(scope.ServiceProvider);
